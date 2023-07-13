@@ -5,6 +5,7 @@ use crate::Cell;
 
 use crate::Size;
 
+use crate::board::CellError;
 use crate::Player;
 
 /// A player's move of a piece.
@@ -111,7 +112,7 @@ fn parse_cell(cell: &str) -> Result<Cell, ParseCellError> {
         return Err(ParseCellError::InvalidColumn);
     };
 
-    Ok(Cell::new(row, col))
+    Ok(Cell::new(row, col)?)
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -120,4 +121,6 @@ pub enum ParseCellError {
     InvalidRow,
     #[error("Invalid column")]
     InvalidColumn,
+    #[error("Out of bounds")]
+    OutOfBounds(#[from] CellError),
 }

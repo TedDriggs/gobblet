@@ -9,8 +9,16 @@ use crate::{Player, Size};
 pub struct Cell(usize);
 
 impl Cell {
-    pub fn new(row: u8, col: u8) -> Self {
-        Self((row * 3 + col).into())
+    pub fn new(row: u8, col: u8) -> Result<Self, CellError> {
+        if row > 2 {
+            return Err(CellError::RowOutOfBounds);
+        }
+
+        if col > 2 {
+            return Err(CellError::ColumnOutOfBounds);
+        }
+
+        Ok(Self((row * 3 + col).into()))
     }
 
     /// The 0-indexed row of the cell.
@@ -34,6 +42,14 @@ impl fmt::Display for Cell {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "r{}c{}", self.row(), self.col())
     }
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum CellError {
+    #[error("Row out of bounds")]
+    RowOutOfBounds,
+    #[error("Column out of bounds")]
+    ColumnOutOfBounds,
 }
 
 #[derive(Default)]
