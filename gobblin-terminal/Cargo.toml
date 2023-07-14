@@ -1,0 +1,7 @@
+[package]
+name = "gobblin-terminal"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gobblin = { version = "=0.1.0", path = "../gobblin" }
