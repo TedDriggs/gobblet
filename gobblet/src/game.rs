@@ -2,9 +2,15 @@ use std::fmt;
 
 use crate::{Board, Line, Move, Player};
 
+/// The number of pieces each player has of each size at the start
+/// of the game.
+const STARTING_INVENTORY: usize = 2;
+
+/// A game instance, which includes all moves up to the current point
+/// in the game.
+#[derive(Default)]
 pub struct Game {
     board: Board,
-    starting_inventory: u8,
     moves: Vec<Move>,
     victory: Option<Victory>,
 }
@@ -45,7 +51,7 @@ impl Game {
                 .filter(|(_, state)| state[mv.size] == Some(mv.player))
                 .count();
 
-            if in_play >= self.starting_inventory.into() {
+            if in_play >= STARTING_INVENTORY {
                 return Err(SubmitMoveError::PieceNotInInventory);
             }
         };
@@ -69,27 +75,19 @@ impl Game {
         Ok(victory)
     }
 
+    /// Get the current state of the board.
     pub fn board(&self) -> &Board {
         &self.board
     }
 
+    /// Get the moves in order of submission.
     pub fn moves(&self) -> &[Move] {
         &self.moves
     }
 
+    /// Get the outcome of the game; if this is `None`, the game has not ended.
     pub fn outcome(&self) -> Option<Victory> {
         self.victory
-    }
-}
-
-impl Default for Game {
-    fn default() -> Self {
-        Self {
-            board: Board::default(),
-            starting_inventory: 2,
-            moves: vec![],
-            victory: None,
-        }
     }
 }
 
@@ -123,12 +121,16 @@ fn look_for_victory(board: &Board, last_moving_player: Player) -> Option<Victory
         }
     }
 
+    // If there is no victory for the first-choice winner, then the
+    // victory will be that of the last-moving player - or None, if
+    // the last-moving player also doesn't have a victory.
     win_for_last_moving_player.map(|line| Victory {
         player: last_moving_player,
         line,
     })
 }
 
+/// The terminal state of a game.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Victory {
     player: Player,
@@ -136,10 +138,15 @@ pub struct Victory {
 }
 
 impl Victory {
+    /// The player who won the game.
     pub fn player(&self) -> Player {
         self.player
     }
 
+    /// The line that won the game for the player.
+    ///
+    /// In the event that the board has multiple winning lines for
+    /// the player, only one will be returned. This is stable, but implementation-defined.
     pub fn line(&self) -> Line {
         self.line
     }
