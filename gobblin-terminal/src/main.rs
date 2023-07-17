@@ -1,15 +1,23 @@
-use std::error::Error;
+use std::{
+    error::Error,
+    io::{self, Write},
+};
 
 use gobblin::Game;
+
+mod ui;
 
 pub fn main() -> Result<(), Box<dyn Error>> {
     let mut game = Game::default();
 
     while game.outcome().is_none() {
-        println!("{}", game.board());
+        ui::draw_game(&game);
 
-        let mut next_move = String::new();
-        std::io::stdin().read_line(&mut next_move)?;
+        print!("{:#}: ", game.next_player());
+        io::stdout().flush()?;
+
+        let mut next_move = format!("{:#} ", game.next_player());
+        io::stdin().read_line(&mut next_move)?;
 
         let next_mv = match next_move.parse() {
             Ok(mv) => mv,

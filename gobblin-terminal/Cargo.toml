@@ -4,4 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+ansi-escapes = "0.1.1"
 gobblin = { version = "=0.1.0", path = "../gobblin" }
