@@ -22,6 +22,18 @@ pub struct Move {
     pub target: Cell,
 }
 
+impl Move {
+    /// Create a new instance of `Self`.
+    pub fn new(player: Player, size: Size, source: Option<Cell>, target: Cell) -> Self {
+        Self {
+            player,
+            size,
+            source,
+            target,
+        }
+    }
+}
+
 impl fmt::Display for Move {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}: {} ", self.player, self.size)?;
