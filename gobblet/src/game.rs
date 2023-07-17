@@ -17,11 +17,34 @@ pub struct Game {
 
 impl Game {
     /// Get the player whose turn it is.
+    ///
+    /// # Example
+    /// ```
+    /// # use gobblet::{Cell, Game, Move, Player, Size};
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// let mut game = Game::default();
+    /// assert_eq!(game.next_player(), Player::One);
+    ///
+    /// game.submit(Move::new(Player::One, Size::Small, None, Cell::new(0, 0)?))?;
+    /// assert_eq!(game.next_player(), Player::Two);
+    /// # Ok(()) }
     pub fn next_player(&self) -> Player {
         self.moves.last().map(|m| !m.player).unwrap_or(Player::One)
     }
 
     /// Submit a move to the game.
+    ///
+    /// # Example
+    /// ```
+    /// # use gobblet::{Cell, Game, Move, Player, Size};
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// let mut game = Game::default();
+    /// let victory = game.submit(Move::new(Player::One, Size::Small, None, Cell::new(0, 0)?))?;
+    ///
+    /// assert!(victory.is_none());
+    /// assert_eq!(game.moves().len(), 1);
+    /// assert_eq!(game.next_player(), Player::Two);
+    /// # Ok(()) }
     pub fn submit(&mut self, mv: Move) -> Result<Option<Victory>, SubmitMoveError> {
         if self.victory.is_some() {
             return Err(SubmitMoveError::GameOver);
