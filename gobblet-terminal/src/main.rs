@@ -3,7 +3,7 @@ use std::{
     io::{self, Write},
 };
 
-use gobblin::Game;
+use gobblet::Game;
 
 mod ui;
 

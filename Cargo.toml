@@ -1,2 +1,2 @@
 [workspace]
-members = ["gobblin", "gobblin-terminal"]
+members = ["gobblet", "gobblet-terminal"]

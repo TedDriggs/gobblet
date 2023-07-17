@@ -1,11 +1,11 @@
 [package]
-name = "gobblin-terminal"
+name = "gobblet-terminal"
 version = "0.1.0"
 edition = "2021"
 authors = ["Ted Driggs <t.driggs@outlook.com>"]
 license = "MIT"
-description = "Terminal UI for the Gobblins board game"
+description = "Terminal UI for the gobblets board game"
 
 [dependencies]
 ansi-escapes = "0.1.1"
-gobblin = { version = "=0.1.0", path = "../gobblin" }
+gobblet = { version = "=0.1.0", path = "../gobblet" }

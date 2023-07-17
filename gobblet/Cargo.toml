@@ -1,10 +1,10 @@
 [package]
-name = "gobblin"
+name = "gobblet"
 version = "0.1.0"
 edition = "2021"
 authors = ["Ted Driggs <t.driggs@outlook.com>"]
 license = "MIT"
-description = "Game engine for the Gobblins board game"
+description = "Game engine for the gobblets board game"
 
 [dependencies]
 thiserror = "1.0.43"
