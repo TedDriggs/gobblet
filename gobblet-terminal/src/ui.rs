@@ -1,6 +1,6 @@
 use ansi_escapes::{CursorTo, EraseScreen};
-use gobblet::Game;
 
-pub fn draw_game(game: &Game) {
-    println!("{}{}{}", EraseScreen, CursorTo::TopLeft, game.board())
+/// Erase the screen and move the cursor to the top left.
+pub fn reset_screen() {
+    print!("{}{}", EraseScreen, CursorTo::TopLeft);
 }

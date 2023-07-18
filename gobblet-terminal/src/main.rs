@@ -5,13 +5,23 @@ use std::{
 
 use gobblet::Game;
 
+use crate::ui::reset_screen;
+
 mod ui;
 
 pub fn main() -> Result<(), Box<dyn Error>> {
     let mut game = Game::default();
 
+    let mut last_move_error: Option<Box<dyn std::fmt::Display>> = None;
+
     while game.outcome().is_none() {
-        ui::draw_game(&game);
+        reset_screen();
+
+        println!("{}", game.board());
+
+        if let Some(err) = last_move_error.take() {
+            println!("Last move invalid: {}. Please try again.", err);
+        }
 
         print!("{:#}: ", game.next_player());
         io::stdout().flush()?;
@@ -22,13 +32,13 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         let next_mv = match next_move.parse() {
             Ok(mv) => mv,
             Err(e) => {
-                println!("Invalid move: {}", e);
+                last_move_error = Some(Box::new(e));
                 continue;
             }
         };
 
         if let Err(err) = game.submit(next_mv) {
-            println!("Illegal move: {}", err);
+            last_move_error = Some(Box::new(err));
         }
     }
 
