@@ -181,6 +181,9 @@ impl fmt::Display for Victory {
     }
 }
 
+/// An error that prevented evaluation of a submitted move.
+///
+/// See [`Game::submit`].
 #[derive(Debug, thiserror::Error)]
 pub enum SubmitMoveError {
     #[error("The game has already ended")]

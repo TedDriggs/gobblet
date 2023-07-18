@@ -5,10 +5,16 @@ use std::{
 
 use crate::{Player, Size};
 
+/// Coordinates for a cell on a [`Board`].
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Cell(usize);
 
 impl Cell {
+    /// Create a new instance of `Self`.
+    ///
+    /// # Errors
+    /// This function returns an error if the row or column is out of bounds
+    /// for a standard board.
     pub fn new(row: u8, col: u8) -> Result<Self, CellError> {
         if row > 2 {
             return Err(CellError::RowOutOfBounds);
@@ -44,6 +50,9 @@ impl fmt::Display for Cell {
     }
 }
 
+/// Error encountered during creation of a cell.
+///
+/// See [`Cell::new`].
 #[derive(Debug, thiserror::Error)]
 pub enum CellError {
     #[error("Row out of bounds")]
@@ -52,6 +61,7 @@ pub enum CellError {
     ColumnOutOfBounds,
 }
 
+/// The contents of a [`Cell`].
 #[derive(Default)]
 pub struct CellState {
     small: Option<Player>,
@@ -117,12 +127,16 @@ impl fmt::Display for CellState {
     }
 }
 
+/// A point-in-time game board.
 #[derive(Default)]
 pub struct Board {
     cells: [CellState; 9],
 }
 
 impl Board {
+    /// Iterate over each cell's coordinates and current state.
+    ///
+    /// Iteration order is implementation-defined.
     pub fn cells(&self) -> impl Iterator<Item = (Cell, &CellState)> {
         self.cells
             .iter()
@@ -130,6 +144,7 @@ impl Board {
             .map(|(idx, item)| (Cell(idx), item))
     }
 
+    /// Get cell coordinates and state for the three cells on the specified line.
     pub fn line(&self, line: Line) -> impl Iterator<Item = (Cell, &CellState)> {
         self.cells().filter(move |(c, _)| line.matches(c))
     }
@@ -169,6 +184,7 @@ impl fmt::Display for Board {
     }
 }
 
+/// Identifier of a row, column, or diagonal which can be used to match cells in a [`Board`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Line {
     Row(u8),
@@ -178,7 +194,17 @@ pub enum Line {
 }
 
 impl Line {
-    fn matches(&self, cell: &Cell) -> bool {
+    /// Check if a cell coordinate is on this line.
+    ///
+    /// # Example
+    /// ```
+    /// # use gobblet::{Cell, Line};
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// let line = Line::Row(0);
+    /// assert!(line.matches(&Cell::new(0, 0)?));
+    /// # Ok(()) }
+    /// ```
+    pub fn matches(&self, cell: &Cell) -> bool {
         match self {
             Line::Row(r) => cell.row() == *r,
             Line::Col(c) => cell.col() == *c,
@@ -187,6 +213,9 @@ impl Line {
         }
     }
 
+    /// Get all possible lines for the board.
+    ///
+    /// Iteration order is implementation-defined.
     pub fn all() -> impl Iterator<Item = Line> {
         (0..3)
             .map(Self::Row)

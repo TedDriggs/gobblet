@@ -1,8 +1,11 @@
 use std::{fmt, ops::Not};
 
+/// An agent which can submit moves in the game.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Player {
+    /// The first player to move in the game.
     One,
+    /// The second player to move in the game.
     Two,
 }
 

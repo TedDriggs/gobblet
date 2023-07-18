@@ -1,5 +1,6 @@
 use std::fmt;
 
+/// The size of a piece. Larger pieces can be placed over smaller pieces.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Size {
     Small = 1,

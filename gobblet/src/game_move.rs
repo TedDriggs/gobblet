@@ -73,6 +73,7 @@ impl FromStr for Move {
     }
 }
 
+/// Error encountered when parsing a [`Move`] from its string representation.
 #[derive(Debug, thiserror::Error)]
 pub enum ParseMoveError {
     #[error("Too few parts")]
@@ -127,6 +128,7 @@ fn parse_cell(cell: &str) -> Result<Cell, ParseCellError> {
     Ok(Cell::new(row, col)?)
 }
 
+/// Error encountered when parsing a [`Cell`] as part of a [`Move`].
 #[derive(Debug, thiserror::Error)]
 pub enum ParseCellError {
     #[error("Invalid row")]
