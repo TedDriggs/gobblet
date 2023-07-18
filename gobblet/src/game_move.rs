@@ -116,7 +116,9 @@ fn parse_source(source: &str) -> Result<Option<Cell>, ParseCellError> {
 }
 
 fn parse_cell(cell: &str) -> Result<Cell, ParseCellError> {
-    let (row, col) = cell.split_once(",").unwrap();
+    let Some((row, col)) = cell.split_once(",") else {
+        return Err(ParseCellError::TooFewParts);
+    };
     let Ok(row) = row.parse() else {
         return Err(ParseCellError::InvalidRow);
     };
@@ -131,6 +133,8 @@ fn parse_cell(cell: &str) -> Result<Cell, ParseCellError> {
 /// Error encountered when parsing a [`Cell`] as part of a [`Move`].
 #[derive(Debug, thiserror::Error)]
 pub enum ParseCellError {
+    #[error("Too few parts: A cell should be row,col")]
+    TooFewParts,
     #[error("Invalid row")]
     InvalidRow,
     #[error("Invalid column")]
